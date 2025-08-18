@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prediksi Penjualan Voucher</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="main">
+    <div class="signup">
+      <form action="{{ url_for('prediksi') }}" method="POST">
+        <label for="chk" aria-hidden="true">PREDIKSI PENJUALAN <br> VOUCHER GAMES</label>
+
+        <label class="tanggal">MASUKAN TANGGAL MULAI PREDIKSI:</label>
+        <input type="date" name="start_date" required>
+        <label class="tanggal" style="margin-top: 20px;;">PILIH RENTANG WAKTU:</label>
+        <select name="agregasi" required>
+          <option value="harian">Harian (1 Hari) </option>
+          <option value="mingguan">Mingguan (7 Hari)</option>
+          <option value="bulanan">Bulanan (30 Hari)</option>
+        </select>
+
+        <button type="submit">Lakukan Prediksi</button>
+      </form>
+        <div class="half-circle">
+          <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+        </div>
+    </div>
+  </div>
+</body>
+</html>

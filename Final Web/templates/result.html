@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hasil Prediksi</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="main">
+    <div class="signup">
+      <form>
+        <label for="chk" aria-hidden="true">Hasil Prediksi Penjualan Voucher</label>
+        {% for tanggal, prediksi in results %}
+        <p class="hasil" style="margin-top: 50px;">
+          Tanggal Prediksi : <br>
+          <span class="tebal">{{ tanggal }}</span>
+        </p>
+        <p class="hasil" style="margin-bottom: 50px;">
+          Hasil Prediksi: <br>
+          <span class="tebal">Rp {{ "{:,.0f}".format(prediksi) }}</span>
+        </p>
+        {% endfor %}
+        <a href="{{ url_for('index') }}">
+          <button type="button">Kembali ke Form</button>
+        </a>
+      </form>
+      <div class="half-circle">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+      </div>
+    </div>
+  </div>
+</body>
+</html>
