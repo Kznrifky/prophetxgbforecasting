@@ -1,6 +1,9 @@
-flask 
-pandas 
-numpy 
-joblib 
-scikit-learn 
+flask
 gunicorn
+pandas
+numpy
+scikit-learn
+xgboost
+openpyxl
+python-dotenv
+joblib
