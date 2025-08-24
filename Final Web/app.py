@@ -7,12 +7,10 @@ from pathlib import Path
 import sys
 import os
 
-# ------------------------------------------------------------------
-# 1) FIX untuk unpickle: pastikan kelas yang dipakai saat serialisasi
-#    tersedia di modul ini, dan arahkan __main__ ke modul ini.
-# ------------------------------------------------------------------
+# ------------------------------------------------------------
+# FIX inti: pastikan unpickle bisa menemukan ManualXGBoost
+# ------------------------------------------------------------
 
-# === KELAS DARI KODE TRAINING (tetap ada di sini) ===
 class Node:
     def __init__(self, feature_index=None, threshold=None, left=None, right=None, value=None):
         self.feature_index = feature_index
@@ -104,42 +102,52 @@ class ManualXGBoost:
             y_pred += self.lr * tree.predict(X)
         return y_pred
 
-# >>> ini baris penting untuk kasus unpickle dari __main__
+# >>> BARIS KUNCI: map __main__ ke modul ini (wajib sebelum joblib.load)
 sys.modules['__main__'] = sys.modules[__name__]
 
-# ------------------------------------------------------------------
-# 2) Path aman (Cloud Run menjalankan code di /workspace)
-# ------------------------------------------------------------------
+# ------------------------------------------------------------
+# Path aman (Cloud Run bekerja di /workspace)
+# ------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / "model_manualxgb.pkl"
 SELECTED_PATH = BASE_DIR / "selected_columns.pkl"
 EXCEL_PATH = BASE_DIR / "fitur_dengan_temporal_normalisasi.xlsx"
 
-# ------------------------------------------------------------------
-# 3) Inisialisasi Flask & muat artefak sekali saat startup
-# ------------------------------------------------------------------
 app = Flask(__name__)
 
+# ------------------------------------------------------------
+# Load artefak sekali saat startup + logging error
+# ------------------------------------------------------------
 try:
     model = joblib.load(MODEL_PATH)
-    selected_columns = joblib.load(SELECTED_PATH)
+    # kadang hasil joblib berupa array/Series → pastikan list kolom
+    sc_loaded = joblib.load(SELECTED_PATH)
+    selected_columns = list(sc_loaded) if not isinstance(sc_loaded, list) else sc_loaded
+
     df = pd.read_excel(EXCEL_PATH)
     df["Tanggal"] = pd.to_datetime(df["Tanggal"])
     app.logger.info("Model & data loaded successfully.")
 except Exception as e:
-    # Log error agar mudah dilihat di Cloud Run Logs
     app.logger.exception(f"Failed to load artifacts: {e}")
-    # Fallback minimal supaya service tetap hidup (opsional)
     model = None
     selected_columns = []
     df = pd.DataFrame({"Tanggal": []})
 
-# ------------------------------------------------------------------
-# 4) Routes
-# ------------------------------------------------------------------
+# ------------------------------------------------------------
+# Endpoints
+# ------------------------------------------------------------
 @app.get("/health")
 def health():
     return {"ok": True}
+
+# bantu debugging kalau perlu
+@app.get("/debug/files")
+def debug_files():
+    try:
+        files = sorted(os.listdir(BASE_DIR))
+    except Exception as e:
+        files = [f"error: {e}"]
+    return {"base": str(BASE_DIR), "files": files}
 
 @app.route("/")
 def index():
@@ -160,7 +168,7 @@ def prediksi():
     for i in range(n_days):
         tanggal_prediksi = start_date + pd.Timedelta(days=i)
 
-        # Seed supaya deterministik per tanggal
+        # deterministik per tanggal
         np.random.seed(int(tanggal_prediksi.strftime("%Y%m%d")))
 
         if tanggal_prediksi in df_pred["Tanggal"].values:
@@ -183,7 +191,7 @@ def prediksi():
             row_pred["rolling_14"] = recent.iloc[-14:].mean()
             row_pred["rolling_30"] = recent.iloc[-30:].mean()
 
-        # pastikan kolom tersedia
+        # validasi kolom
         missing = [c for c in selected_columns if c not in row_pred.columns]
         if missing:
             return render_template("result.html", results=[("ERROR", f"Kolom hilang: {missing}")])
@@ -191,20 +199,14 @@ def prediksi():
         X_pred = row_pred[selected_columns].to_numpy()
         y_pred = float(model.predict(X_pred)[0])
 
-        # log untuk debug di Cloud Run
         app.logger.info(f"[DEBUG] Prediksi {tanggal_prediksi.strftime('%Y-%m-%d')} = {y_pred:,.0f}")
-
         results.append((tanggal_prediksi.strftime("%Y-%m-%d"), y_pred))
 
-    # agregasi jika mingguan/bulanan
     if agregasi != "harian":
         total_prediksi = float(np.sum([pred for _, pred in results]))
         results = [(f"{start_date.strftime('%Y-%m-%d')} s.d {results[-1][0]}", total_prediksi)]
 
     return render_template("result.html", results=results)
 
-# ------------------------------------------------------------------
-# 5) Run lokal (Cloud Run pakai gunicorn, ini hanya untuk local dev)
-# ------------------------------------------------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
