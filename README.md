@@ -4,7 +4,7 @@
 ## 🧠 Project Overview
 Repository ini berisi implementasi lengkap dari skripsi S1 Informatika berjudul:
 
-> **“Prediksi Penjualan Voucher Game Online Menggunakan Metode XGBoost Berbasis Residual Prophet”**
+**“Prediksi Penjualan Voucher Game Online Menggunakan Metode XGBoost Berbasis Residual Prophet”**
 
 Penelitian ini mengembangkan pendekatan **hybrid forecasting** dengan mengombinasikan:
 - **Prophet** untuk menangkap tren dan pola musiman pada data time series
