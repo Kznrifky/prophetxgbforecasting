@@ -10,18 +10,7 @@ Penelitian ini mengembangkan pendekatan **hybrid forecasting** dengan mengombina
 - **Prophet** untuk menangkap tren dan pola musiman pada data time series
 - **XGBoost** untuk memodelkan hubungan kompleks antar fitur berbasis residual Prophet
 
-Studi kasus dilakukan menggunakan **data transaksi riil penjualan voucher game online PT. Athena**.
-
----
-
-## 🎓 Academic Information
-- **Nama**: Muhammad Rifky  
-- **NPM**: 21081010331  
-- **Program Studi**: Informatika (S1)  
-- **Fakultas**: Ilmu Komputer  
-- **Universitas**: UPN “Veteran” Jawa Timur  
-- **Tahun**: 2025  
-- **Jenis Karya**: Skripsi  
+Studi kasus dilakukan menggunakan **data transaksi riil penjualan voucher game online mobile legend.
 
 ---
 
@@ -35,7 +24,7 @@ Studi kasus dilakukan menggunakan **data transaksi riil penjualan voucher game o
 ---
 
 ## 📦 Dataset Description
-- **Sumber Data**: Data transaksi internal PT. Athena
+- **Sumber Data**: Data transaksi Internal PT XYZ
 - **Tipe Data Awal**: Data transaksi (transaction-level)
 - **Jumlah Data Awal**: ± **57.000 baris transaksi**
 - **Periode Data**: Data historis penjualan voucher game online
