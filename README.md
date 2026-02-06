@@ -10,7 +10,7 @@ Penelitian ini mengembangkan pendekatan **hybrid forecasting** dengan mengombina
 - **Prophet** untuk menangkap tren dan pola musiman pada data time series
 - **XGBoost** untuk memodelkan hubungan kompleks antar fitur berbasis residual Prophet
 
-- Studi kasus dilakukan menggunakan **data transaksi riil penjualan voucher game online mobile legend.
+- Studi kasus dilakukan menggunakan **data transaksi riil penjualan voucher game online mobile legend.**
 
 ---
 
