@@ -162,8 +162,8 @@ Evaluasi performa model menggunakan:
 - **MAPE**
 
 ### 📈 Hasil Terbaik
-- **MAE (scaled)**: 0.0361  
-- **RMSE (scaled)**: 0.0797  
+- **MAE (scaled)**: **3.61%**
+- **RMSE (scaled)**: **7.97%**
 - **MAPE**: **1.77%**
 
 ➡️ Hasil ini menunjukkan peningkatan akurasi yang signifikan dibandingkan pendekatan tunggal.
@@ -175,16 +175,6 @@ Model diimplementasikan ke dalam **aplikasi prediksi berbasis web** menggunakan 
 - Input data penjualan
 - Output hasil prediksi
 - Visualisasi prediksi vs data aktual
-
----
-
-## 📁 Project Structure
-├── Final Web/
-│ ├── app.py
-│ ├── templates/
-│ └── static/
-├── runtime.txt
-├── README.md
 
 ---
 
