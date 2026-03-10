@@ -157,13 +157,12 @@ Tujuan:
 ## 📊 Model Evaluation
 Evaluasi performa model menggunakan:
 - **MAE**
-- **MSE**
 - **RMSE**
 - **MAPE**
 
 ### 📈 Hasil Terbaik
-- **MAE (scaled)**: **3.61%**
-- **RMSE (scaled)**: **7.97%**
+- **MAE**: **3.61%**
+- **RMSE**: **7.97%**
 - **MAPE**: **1.77%**
 
 ➡️ Hasil ini menunjukkan peningkatan akurasi yang signifikan dibandingkan pendekatan tunggal.
